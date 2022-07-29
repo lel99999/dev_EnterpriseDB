@@ -1,0 +1,91 @@
+---
+#vars_file:
+#  - ~/RHACCOUNT
+#become: yes
+#become_method: sudo
+
+- name: Install enterprisedb repo
+  yum:
+    name: https://yum.enterprisedb.com/edbrepos/edb-repo-latest.noarch.rpm
+    state: latest
+  become: yes
+  become_method: sudo
+
+# Replace 'USERNAME:PASSWORD' below with your username and password for the EDB repositories
+# Visit https://www.enterprisedb.com/accounts/profile to get your username and password
+- name: Replace username/password for EDB repositories
+  shell: sed -i "s@<username>:<password>@{{ -edb-uid }}:{{ _edb-pwd }}@" /etc/yum.repos.d/edb.repo
+# shell: sed -i "s@<username>:<password>@USERNAME:PASSWORD@" /etc/yum.repos.d/edb.repo
+
+- name: Install EPEL repository
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: latest
+  become: yes
+  become_method: sudo
+
+## Enable the optional, extras, and HA repositories since EPEL packages may depend on packages from these repositories
+## subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"  --enable "rhel-ha-for-rhel-*-server-rpms"
+- name: Make sure RHEL 7 repos available
+  command: subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"  --enable "rhel-ha-for-rhel-*-server-rpms"
+
+- name: Install EDB AS13
+  yum:
+    name: edb-as13-server
+
+- name: Initialize Database Cluster
+  shell: PGSETUP_INITDB_OPTIONS="-E UTF-8" /usr/edb/as13/bin/edb-as-13-setup initdb
+
+- name: Start Database Server
+  shell: systemctl start edb-as-13
+  become: yes
+  become_method: sudo
+
+- name: Install EDB JDBC
+  yum:
+    name: edb-jdbc
+    state: latest
+  become: yes
+  become_method: sudo
+
+#Required for computer to make an ssl connection for postgres (since they sign their cert with letsencrypt)
+#- name: Install cert utilities
+#  yum: 
+#    name: ca-certificates
+#    state: latest
+#  become: yes
+#  become_method: sudo
+##
+##- name: Get JDBC driver JAR file for postgresql
+##  get_url:
+##    url: "{{ jdbc_postgres_url }}"
+##    dest: "{{ jre_lib_path }}/"
+##    mode: 0644
+##
+##- name: Get the JDBC driver for SQLServer
+##  get_url:
+##    url: "{{ jdbc_sql_url }}"
+##    dest: "/tmp/"
+##    mode: 0644
+##
+##- name: Unpack the JDBC driver for SQLServer
+##  unarchive:
+##    src: "/tmp/{{ jdbc_sql_file }}"
+##    dest: "/tmp/"
+##    copy: no
+##
+##- name: Move the JRE8 JAR file to the right location
+##  copy:
+###   src: "/tmp/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"
+##    src: "/tmp/sqljdbc_7.2/enu/mssql-jdbc-7.2.2.jre8.jar"
+##    dest: "{{ jre_lib_path }}"
+##    remote_src: yes
+##    mode: 0644
+##
+##- name: Move the JRE11 JAR file to the right location
+##  copy:
+###   src: "/tmp/sqljdbc_6.0/enu/jre8/sqljdbc42.jar"
+##    src: "/tmp/sqljdbc_7.2/enu/mssql-jdbc-7.2.2.jre11.jar"
+##    dest: "{{ jre_lib_path }}"
+##    remote_src: yes
+##    mode: 0644
