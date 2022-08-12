@@ -19,3 +19,10 @@ EnterpriseDB Workspace, Development and Notes
 ##### Notes
 - Postgres user replace by enterprisedb 
 
+##### Commands
+- Startup:
+  `$sudo su - enterprisedb&&/usr/edb/as<version>/bin/edb-postgres -D /<path>/data` <br/>
+
+- Reload Configs w/o Restarting the DB
+  `/usr/edb/as<version>/bin/pg_ctl reload` <br/>
+
