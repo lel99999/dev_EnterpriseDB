@@ -33,3 +33,10 @@ EnterpriseDB Workspace, Development and Notes
   ### If not compatible
   ERROR:  unrecognized configuration parameter "db_dialect"
   ```
+##### Commands
+- Startup:
+  `$sudo su - enterprisedb&&/usr/edb/as<version>/bin/edb-postgres -D /<path>/data` <br/>
+
+- Reload Configs w/o Restarting the DB
+  `/usr/edb/as<version>/bin/pg_ctl reload` <br/>
+
