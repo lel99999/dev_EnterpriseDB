@@ -14,7 +14,7 @@ vars_file:
 # Replace 'USERNAME:PASSWORD' below with your username and password for the EDB repositories
 # Visit https://www.enterprisedb.com/accounts/profile to get your username and password
 - name: Replace username/password for EDB repositories
-  shell: sed "s@<username>:<password>@{{ _edb-uid }}:{{ _edb-pwd }}@g" /etc/yum.repos.d/edb.repo
+  shell: sed -i "s/<username>:<password>/{{ _edb-uid }}:{{ _edb-pwd }}/g" /etc/yum.repos.d/edb.repo
 # shell: sed -i "s@<username>:<password>@{{ _edb-uid }}:{{ _edb-pwd }}@" /etc/yum.repos.d/edb.repo
 # shell: sed -i "s@<username>:<password>@USERNAME:PASSWORD@" /etc/yum.repos.d/edb.repo
 
