@@ -40,6 +40,6 @@ EnterpriseDB Workspace, Development and Notes
 - Reload Configs w/o Restarting the DB
   `/usr/edb/as<version>/bin/pg_ctl reload` <br/>
 
-##### Sed on OSX - sedi -i -> sed -i.bak
+##### Sed on OSX - sed -i -> sed -i.bak
 - Fix: <br/>
   `$brew install gnu-sed` <br/>
