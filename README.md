@@ -16,6 +16,13 @@ EnterpriseDB Workspace, Development and Notes
   SELECT pg_reload_conf()
   ```
 
+##### pg_hba.conf <br/>
+- Entries in pg_hba are processed in the order they given. So second line would not work as expected <br/>
+
+```
+local  all  all       md5  
+local  all  postgres  trust   # ident ```
+
 ##### Notes
 - Postgres user replace by enterprisedb
 
